@@ -1,0 +1,6 @@
+---
+app_user: "admin"
+http_host: "server1"
+http_conf: "server1.conf"
+http_port: "80"
+disable_default: true
