@@ -1,0 +1,21 @@
+---
+- hosts: debian-servers
+  vars:
+    nginx_user: www-data
+  become:
+    true
+  roles:
+   - nginx
+   tags:
+    - web1_server
+
+- hosts: redhat-servers
+  vars:
+    nginx_user: nginx
+  become:
+    true
+  roles:
+   - epel
+   - nginx
+   tags:
+    - web2_server
