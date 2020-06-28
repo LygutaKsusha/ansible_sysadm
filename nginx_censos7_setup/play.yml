@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Copy script setup
+    copy: src=setup.sh dest=/home/setup.sh mode=0777
