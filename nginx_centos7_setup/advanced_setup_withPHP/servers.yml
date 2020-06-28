@@ -1,0 +1,97 @@
+---
+- hosts: all
+
+  tasks:
+
+    - name: Install packets
+      yum:
+        name: ['wget', 'nano', 'git']
+
+    - name: Install epel-release
+      yum: name=epel-release state=installed
+
+    - name: Disable SELinux
+      command: sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+
+    - name: Inable wirewall
+      service: name=firewalld state=started enabled=yes
+
+    - name: Firewall 80
+      firewalld:
+        port: 80/tcp
+        permanent: true
+        state: enabled
+
+    - name: Firewall 8080
+      firewalld:
+        port: 8080/tcp
+        permanent: true
+        state: enabled
+
+    - name: Firewall reload
+      command: firewall-cmd --reload
+
+   
+    - name: install nginx
+      yum: name=nginx state=present
+
+    - name: copy files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}" 
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: 'nginx.conf', dest: '/etc/nginx/nginx.conf', mode: '0644' }
+        - { src: 'index.php', dest: '/usr/share/nginx/html/index.php', mode: '0755' }
+        - { src: 'phpmyadmin.sh', dest: '/tmp/phpmyadmin.sh', mode: '0755' }
+        - { src: 'phpMyAdmin.conf', dest: '/etc/nginx/conf.d/phpMyAdmin.conf', mode: '0644' }
+
+    - name: Add REMI for php7
+      command: rpm -Uvh "{{ item }}" 
+      with_items:
+        - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+        - https://mirror.webtatic.com/yum/el7/webtatic-release.rpm        
+
+
+    - name: Install php72
+      yum:
+        name: ['php72', 'php72w', 'php72w-fpm', 'php72w-mysql','php72w-mysqli', 'php72w-mbstring']
+
+    - name: Start php-fpm
+      service: name=php-fpm state=started enabled=yes
+
+    - name: Start nginx
+      service: name=nginx state=started enabled=yes
+
+    - name: Install redis
+      yum: name=redis state=latest
+
+    - name: Start redis 
+      service: name=redis state=started enabled=yes
+
+    - name: Download epel-release
+      yum:
+        name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+        state: present
+
+    - name: Delete mariadb
+      yum:
+        name: mariadb-libs
+        state: removed
+
+    - name: Install MySql
+      yum:
+        name: ['mysql-community-devel*','mysql-community-server*','MySQL-python', 'mysql-community-common', 'mysql-community-libs', 'mysql-community-libs-compat']
+
+
+    - name: restart php-fpm
+      service: name=php-fpm state=restarted
+
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+
+    - name: Install phpmyadmin
+      command: bash "{{ item }}"
+      with_items: 
+        - /tmp/phpmyadmin.sh
