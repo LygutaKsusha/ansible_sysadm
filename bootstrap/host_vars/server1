@@ -2,5 +2,11 @@ firewall_allowed_tcp_ports:
   - 80
   - 443
   - 5930
+  
+docker_package: docker-ce
+docker_compose_version: 1.22.0
+docker_users:
+  - vagrant  
+
 
 
