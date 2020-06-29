@@ -8,6 +8,7 @@
     - tools
     - aliases
     - geerlingguy.firewall
+    - geerlingguy.docker
 
 
 
