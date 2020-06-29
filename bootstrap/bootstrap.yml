@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - apt_upgrade
+    - hostnames
+    - users
+    - tools
+    - aliases
+    - geerlingguy.firewall
+
+
+

@@ -1,0 +1,29 @@
+---
+- name: Create "vagrant" user
+  user:
+    name: vagrant
+    shell: /bin/bash
+    uid: 1000
+    group: users
+    groups: sudo
+    append: true #--> user is not removed from any other group
+    password: '$6$Y5Hj5GEfi/XR4$aUbFimqtyCBtL62Qf0z8G1KeM12fCpXpLdMj7G8rksH/6aK9aCu1SY75zHMBfy43OutAxDcqdsL3cAXPoUaQk0'
+
+- name: Add user "vagrant" to "sudo-nopasswd" group
+  user: 
+    name: vagrant
+    groups: sudo-nopasswd
+    append: true # --> user is not removed from any other group
+  when: passwordless_sudo is defined and passwordless_sudo == true
+
+- name: Remove user "vagrant" from "sudo-nopasswd" group
+  shell: /usr/sbin/delgroup vagrant sudo-nopasswd
+  when: not (passwordless_sudo is defined and passwordless_sudo == true)
+  ignore_errors: yes
+
+    
+
+
+
+
+

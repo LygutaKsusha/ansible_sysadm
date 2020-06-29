@@ -1,0 +1,37 @@
+---
+- name: "Create root user's .ssh directory"
+  file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: "Copy root user's authorized_keys"
+  copy:
+    src: authorized_keys
+    dest: /root/.ssh/authorized_keys
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Create vagrant user's .ssh directory"
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    owner: vagrant
+    group: users
+    mode: 0700
+- name: "Copy vagrant user's authorized_keys"
+  copy:
+    src: authorized_keys_vagrant
+    dest: /home/vagrant/.ssh/authorized_keys
+    owner: vagrant
+    group: users
+    mode: 0600
+    
+
+
+
+
+

@@ -1,0 +1,12 @@
+---
+- name: Copy vagrant's .bash_aliases
+  copy:
+    src: .bash_aliases
+    dest: /home/vagrant/.bash_aliases
+    owner: vagrant
+    group: users
+    mode: 0644
+
+
+
+
