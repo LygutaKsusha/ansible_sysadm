@@ -1,0 +1,15 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  external_labels:
+      monitor: 'monitoring'
+ 
+scrape_configs:
+  - job_name: 'prometheus'
+
+    static_configs:
+
+      - targets: ['http://203.0.113.111:9090']
+
+
+

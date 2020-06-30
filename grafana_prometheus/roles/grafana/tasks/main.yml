@@ -1,0 +1,31 @@
+- name: Download grafana deb file
+  get_url:
+    url=" https://dl.grafana.com/oss/release/{{ grafana_filename }}"
+    dest="/tmp/{{ grafana_filename }}"
+
+- name: install grafana
+  apt: deb="/tmp/{{ grafana_filename }}" state=present
+ 
+- name: grafana is running and enabled
+  service: name=grafana-server state=started enabled=yes
+
+
+- name: "Grafana configuration file copy"
+  template:
+    src: "grafana.conf.j2"
+    dest: /etc/grafana/grafana.ini
+  notify: event_restart_grafana
+
+
+- name: Grafana server started
+  service:
+    name: grafana-server
+    enabled: true
+    state: started
+
+- name: Check if grafana is accessible
+  uri:
+    url: http://203.0.113.111:3000/login
+    method: GET
+    status_code: 200
+

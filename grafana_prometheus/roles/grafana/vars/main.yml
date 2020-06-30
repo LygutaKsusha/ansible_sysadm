@@ -1,0 +1,4 @@
+---
+grafana_version: 7.0.3
+arch: amd64
+grafana_filename: grafana_{{ grafana_version }}_{{ arch }}.deb
